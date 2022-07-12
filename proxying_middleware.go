@@ -31,7 +31,10 @@ func proxyingMiddleware(ctx context.Context, instances string, logger log.Logger
 	// Set some parameters for our client.
 	var (
 		qps         = 100                    // beyond which we will return an error
-		maxAttempts = 3                      // per request, before giving up
+		// Requests that return errors will be retried until they succeed, up to max (maxAttempts) times,
+		// or until the timeout (maxTime) is elapsed, whichever comes first.
+		// set maxAttempts to 1 will result in no retry but only timeout
+		maxAttempts = 3
 		maxTime     = 250 * time.Millisecond // wallclock time, before giving up
 	)
 
